@@ -28,6 +28,7 @@ let playerLetters = (function() {
             player2Letter = 'X';
         }
         afterPlayer1Selection(player1Letter);
+        initPlayerHeader();
     }
     function afterPlayer1Selection(player1Letter) {
         player1SelectContainer.remove();
@@ -43,6 +44,10 @@ let playerLetters = (function() {
             player1Para.textContent = 'Player 1, you are O\'s.';
             player2Para.textContent = 'Player 2, you are X\'s.';
         }
+    }
+    function initPlayerHeader() {
+        let playerHeader = document.getElementById('player-header-p');
+        playerHeader.textContent = 'Player 1, it\'s your turn.';
     }
 })();
 

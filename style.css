@@ -17,6 +17,11 @@ html, body {
     align-items: center;
 }
 
+.player-header {
+    font-size: 21px;
+    color: white;
+}
+
 .game-container {
     width: 50%;
     height: 50%;
