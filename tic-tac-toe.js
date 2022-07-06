@@ -3,16 +3,17 @@ let gameBoard = (function() {
     gameBoardSquares.forEach(square => square.addEventListener('click', gameSquareClicked))
 
     function gameSquareClicked(event) {
-        console.log(event.target.id);
+        event.target.textContent = "X";
+
+        // who's move? 
+        // what's their letter is?
     }
     return {
         
     }
 })();
 
-let playerLetters = (function() {
-    let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
-    let player1SelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
+let gameFlow = (function() {
     let player1Options = Array.from(document.getElementsByClassName('p1-select-btn'));
     player1Options.forEach(button => button.addEventListener('click', player1Selection));
 
@@ -27,11 +28,17 @@ let playerLetters = (function() {
             player1Letter = 'O';
             player2Letter = 'X';
         }
-        afterPlayer1Selection(player1Letter);
-        initPlayerHeader();
+        playerLetterSelection.afterPlayer1Selection(player1Letter);
+        playerLetterSelection.initPlayerHeader();
     }
-    function afterPlayer1Selection(player1Letter) {
+})();
+
+let playerLetterSelection = {
+    afterPlayer1Selection: function(player1Letter) {
+        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
+        let player1SelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
         player1SelectContainer.remove();
+
         player1Para = document.createElement('p');
         player2Para = document.createElement('p');
         playerContainer.appendChild(player1Para);
@@ -44,10 +51,10 @@ let playerLetters = (function() {
             player1Para.textContent = 'Player 1, you are O\'s.';
             player2Para.textContent = 'Player 2, you are X\'s.';
         }
-    }
-    function initPlayerHeader() {
+    },
+    initPlayerHeader: function() {
         let playerHeader = document.getElementById('player-header-p');
         playerHeader.textContent = 'Player 1, it\'s your turn.';
     }
-})();
+}
 
