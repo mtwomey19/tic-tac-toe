@@ -27,7 +27,7 @@ html, body {
     gap: 15px;
 }
 
-.player-container {
+.p1-selection-container {
     display: flex;
     align-items: center;
     gap: 15px;
@@ -39,4 +39,9 @@ html, body {
 .player-container button {
     width: 60px;
     padding: 6px;
+}
+
+.player-container p {
+    font-size: 18px;
+    color: white;
 }
