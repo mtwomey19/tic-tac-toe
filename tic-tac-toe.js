@@ -15,6 +15,16 @@ let gameBoard = (function() {
 gameBoard.linkEventListeners();
 
 let player = (function() {
-    
-})
+    let player1Options = Array.from(document.getElementsByClassName('p1-select-btn'))
+    function linkEventListeners() {
+        player1Options.forEach(button => button.addEventListener('click', player1Selection))
+    }
+    function player1Selection(event) {
+        console.log(event.target.id);
+    }
+    return {
+        linkEventListeners: linkEventListeners
+    }
+})();
+player.linkEventListeners();
 
