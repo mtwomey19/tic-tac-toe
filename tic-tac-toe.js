@@ -1,22 +1,22 @@
 
-let gameBoard = {
-    gameBoardArray: [],
-    createGame: function(numberOfSquares) {
+let gameBoard = (function() {
+    let gameBoardArray = [];
+    function createGame(numberOfSquares) {
         // Fill out gameBoardArray
         for (let i = 0; i < numberOfSquares; i++) {
             const gameSquare = {
                 id: i,
                 fill: 'none'
             };
-            this.gameBoardArray.push(gameSquare);
+            gameBoardArray.push(gameSquare);
         }
-    },
-    printGameBoardArray: function() {
-        console.log(this.gameBoardArray);
-    },
-    
-}
-
-gameBoard.createGame(9);
-gameBoard.printGameBoardArray();
+    }
+    function printGameBoardArray() {
+        console.log(gameBoardArray);
+    }
+    return {
+        createGame: createGame,
+        printGameBoardArray: printGameBoardArray
+    }
+})();
 
