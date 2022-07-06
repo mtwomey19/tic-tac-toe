@@ -1,28 +1,20 @@
 
 let gameBoard = (function() {
-    let gameBoardArray = [];
-    function createGame(numberOfSquares) {
-        // Fill out gameBoardArray
-        for (let i = 0; i < numberOfSquares; i++) {
-            const gameSquare = {
-                id: i,
-                fill: 'none'
-            };
-            gameBoardArray.push(gameSquare);
-        }
+    let gameBoardSquares = Array.from(document.getElementsByClassName('game-square'));
+    function linkEventListeners() {
+        gameBoardSquares.forEach(square => square.addEventListener('click', gameSquareClicked))
     }
-    function printGameBoardArray() {
-        console.log(gameBoardArray);
+    function gameSquareClicked(event) {
+        console.log(event.target.id);
     }
     return {
-        createGame: createGame,
-        printGameBoardArray: printGameBoardArray
+        gameBoardSquares: gameBoardSquares,
+        linkEventListeners: linkEventListeners
     }
 })();
+gameBoard.linkEventListeners();
 
-let gameFlow = (function() {
-
-})();
-
-
+let player = (function() {
+    
+})
 
