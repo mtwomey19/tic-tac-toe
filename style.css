@@ -11,6 +11,8 @@ html, body {
     height: 100%;
     background-color: black;
     display: flex;
+    flex-direction: column;
+    gap: 30px;
     justify-content: center;
     align-items: center;
 }
@@ -23,4 +25,18 @@ html, body {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
     gap: 15px;
+}
+
+.player-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    font-size: 18px;
+    color: white;
+}
+
+.player-container button {
+    width: 60px;
+    padding: 6px;
 }
