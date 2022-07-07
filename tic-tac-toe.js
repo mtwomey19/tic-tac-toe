@@ -22,6 +22,7 @@ let gameBoard = {
         }
         event.target.disabled = true
         gameBoard.updateHeader(playerTurn);
+
         let horizCheck = gameResult.checkHorizontal(gameBoard.letterTracker);
         let vertCheck = gameResult.checkVertical(gameBoard.letterTracker);
         let diagCheck = gameResult.checkDiaganol(gameBoard.letterTracker);
@@ -41,7 +42,7 @@ let gameBoard = {
     },
     updateHeader: function (playerTurn) {
         let playerHeader = document.getElementById('player-header-p');
-        // Text needs to display one step ahead because it changes on the click
+        // TextContent needs to display one step ahead because it changes on click
         if (playerTurn === 'Player1') {
             playerHeader.textContent = 'Player 2, it\'s your turn.';
         } else {
@@ -89,15 +90,13 @@ let playerLetterSelection = {
         player2Para = document.createElement('p');
         player2Para.setAttribute('id', 'player2-para');
 
-        resetBtn = document.createElement('button');
-        resetBtn.setAttribute('id', 'reset-btn');
-        resetBtn.textContent = 'New Game';
+        newGameBtn = document.createElement('button');
+        newGameBtn.setAttribute('id', 'new-game-btn');
+        newGameBtn.textContent = 'New Game';
 
         playerContainer.appendChild(player1Para);
         playerContainer.appendChild(player2Para);
-        playerContainer.appendChild(resetBtn);
-
-        playerLetterSelection.activateResetBtn();
+        playerContainer.appendChild(newGameBtn);
 
         if (player1Letter === 'X') {
             player1Para.textContent = 'Player 1, you are X\'s.';
@@ -106,18 +105,19 @@ let playerLetterSelection = {
             player1Para.textContent = 'Player 1, you are O\'s.';
             player2Para.textContent = 'Player 2, you are X\'s.';
         }
+        playerLetterSelection.activateNewGameBtn();
     },
     initPlayerHeader: function() {
         let playerHeader = document.getElementById('player-header-p');
         playerHeader.textContent = 'Player 1, it\'s your turn.';
     },
+    activateNewGameBtn: function() {
+        let newGameBtn = document.getElementById('new-game-btn');
+        newGameBtn.addEventListener('click', newGame.resetGame);
+    },
     removePlayerSelectContainer: function() {
         let playerSelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
         playerSelectContainer.remove();
-    },
-    activateResetBtn: function() {
-        let resetBtn = document.getElementById('reset-btn');
-        resetBtn.addEventListener('click', newGame.resetGame);
     }
 }
 
@@ -193,13 +193,13 @@ let gameResult = {
     displayWinner: function(outcome) {
         let playerHeader = document.getElementById('player-header-p');
         if (outcome === 'tie') {
-            playerHeader.textContent = 'Tie!'
+            playerHeader.textContent = 'Tie!';
         } else {
             let player = gameBoard.getPlayerTurn();
             if (player === 'Player2') {
-                playerHeader.textContent = 'Player 1 Wins!'
+                playerHeader.textContent = 'Player 1 Wins!';
             } else {
-                playerHeader.textContent = 'Player 2 Wins!'
+                playerHeader.textContent = 'Player 2 Wins!';
             }
         }
     },
@@ -207,11 +207,11 @@ let gameResult = {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
         let player1Para = document.getElementById('player1-para');
         let player2Para = document.getElementById('player2-para');
-        let resetBtn = document.getElementById('reset-btn');
-        if (player1Para !== null && player2Para !== null && resetBtn !== null) {
+        let newGameBtn = document.getElementById('new-game-btn');
+        if (player1Para !== null && player2Para !== null && newGameBtn !== null) {
             playerContainer.removeChild(player1Para);
             playerContainer.removeChild(player2Para);
-            playerContainer.removeChild(resetBtn);
+            playerContainer.removeChild(newGameBtn);
         }
     }
 }
