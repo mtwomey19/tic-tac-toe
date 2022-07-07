@@ -77,7 +77,10 @@ let playerLetterSelection = {
         player1SelectContainer.remove();
 
         player1Para = document.createElement('p');
+        player1Para.setAttribute('id', 'player1-para');
         player2Para = document.createElement('p');
+        player2Para.setAttribute('id', 'player2-para');
+
         playerContainer.appendChild(player1Para);
         playerContainer.appendChild(player2Para);
 
@@ -97,55 +100,93 @@ let playerLetterSelection = {
 
 let gameResult = {
     checkHorizontal: function(letterTracker) {
-        if (letterTracker['btn-0'] && letterTracker['btn-1'] && letterTracker['btn-2'] === 'X' ||
-            letterTracker['btn-0'] && letterTracker['btn-1'] && letterTracker['btn-2'] === 'O'
+        if ((letterTracker['btn-0'] === 'X' && letterTracker['btn-1'] === 'X' && letterTracker['btn-2'] === 'X') ||
+            (letterTracker['btn-0'] === 'O' && letterTracker['btn-1'] === 'O' && letterTracker['btn-2'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(1);
         } 
-        if (letterTracker['btn-3'] && letterTracker['btn-4'] && letterTracker['btn-5'] === 'X' ||
-            letterTracker['btn-3'] && letterTracker['btn-4'] && letterTracker['btn-5'] === 'O'
+        if ((letterTracker['btn-3'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-5'] === 'X') ||
+            (letterTracker['btn-3'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-5'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(2);
         }
-        if (letterTracker['btn-6'] && letterTracker['btn-7'] && letterTracker['btn-8'] === 'X' ||
-            letterTracker['btn-6'] && letterTracker['btn-7'] && letterTracker['btn-8'] === 'O'
+        if ((letterTracker['btn-6'] === 'X' && letterTracker['btn-7'] === 'X' && letterTracker['btn-8'] === 'X') ||
+            (letterTracker['btn-6'] === 'O' && letterTracker['btn-7'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(3);
         }  
     },
     checkVertical: function(letterTracker) {
-        if (letterTracker['btn-0'] && letterTracker['btn-3'] && letterTracker['btn-6'] === 'X' ||
-            letterTracker['btn-0'] && letterTracker['btn-3'] && letterTracker['btn-6'] === 'O'
+        if ((letterTracker['btn-0'] === 'X' && letterTracker['btn-3'] === 'X' && letterTracker['btn-6'] === 'X') ||
+            (letterTracker['btn-0'] === 'O' && letterTracker['btn-3'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(4);
         }
-        if (letterTracker['btn-1'] && letterTracker['btn-4'] && letterTracker['btn-7'] === 'X' ||
-            letterTracker['btn-1'] && letterTracker['btn-4'] && letterTracker['btn-7'] === 'O'
+        if ((letterTracker['btn-1'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-7'] === 'X') ||
+            (letterTracker['btn-1'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-7'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(5);
         }
-        if (letterTracker['btn-2'] && letterTracker['btn-5'] && letterTracker['btn-8'] === 'X' ||
-            letterTracker['btn-2'] && letterTracker['btn-5'] && letterTracker['btn-8'] === 'O'
+        if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-5'] === 'X' && letterTracker['btn-8'] === 'X') ||
+            (letterTracker['btn-2'] === 'O' && letterTracker['btn-5'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(6);
         }
     },
     checkDiaganol: function(letterTracker) {
-        if (letterTracker['btn-0'] && letterTracker['btn-4'] && letterTracker['btn-8'] === 'X' ||
-            letterTracker['btn-0'] && letterTracker['btn-4'] && letterTracker['btn-8'] === 'O'
+        if ((letterTracker['btn-0'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-8'] === 'X') ||
+            (letterTracker['btn-0'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
-            console.log('Game Over');
+            gameResult.gameOver();
+            console.log(7);
         }
-        if (letterTracker['btn-2'] && letterTracker['btn-4'] && letterTracker['btn-6'] === 'X' ||
-            letterTracker['btn-2'] && letterTracker['btn-4'] && letterTracker['btn-6'] === 'O'
+        if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-6'] === 'X') ||
+            (letterTracker['btn-2'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
-            console.log('Game Over');
-        }  
+            gameResult.gameOver();
+            console.log(8);
+        }
     },
     gameOver: function() {
-        disableAllButons();
-        displayWinner();
-        addNewGameButton(); 
+        gameResult.disableAllGameBoardSquares();
+        gameResult.displayWinner();
+        gameResult.removePlayerContainerChildren();
+        gameResult.addNewGameButton(); 
+    },
+    disableAllGameBoardSquares: function() {
+        let gameBoardSquares = Array.from(document.getElementsByClassName('game-square'))
+        gameBoardSquares.forEach(square => square.disabled = true);
+    },
+    displayWinner: function() {
+        let player = gameBoard.getPlayerTurn();
+        let playerHeader = document.getElementById('player-header-p');
+        if (player === 'Player2') {
+            playerHeader.textContent = 'Player 1 Wins!'
+        } else {
+            playerHeader.textContent = 'Player 2 Wins!'
+        }
+    },
+    addNewGameButton: function() {
+        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
+        const newGameBtn = document.createElement('button');
+        newGameBtn.setAttribute('id', 'new-game-btn');
+        newGameBtn.textContent = 'New Game';
+        playerContainer.appendChild(newGameBtn);
+
+
+    },
+    removePlayerContainerChildren: function() {
+        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
+        let child1 = document.getElementById('player1-para');
+        let child2 = document.getElementById('player2-para');
+        playerContainer.removeChild(child1);
+        playerContainer.removeChild(child2);
     }
 }
 
