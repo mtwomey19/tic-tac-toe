@@ -50,3 +50,8 @@ html, body {
     font-size: 18px;
     color: white;
 }
+
+#new-game-btn {
+    width: 120px;
+    padding: 6px;
+}

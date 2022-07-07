@@ -5,7 +5,7 @@ let gameBoard = {
     p2Letter: '',
     letterTracker: {},
     addListeners: function() {
-        this.gameBoardSquares.forEach(square => square.addEventListener('click', this.gameSquareClicked))
+        gameBoard.gameBoardSquares.forEach(square => square.addEventListener('click', gameBoard.gameSquareClicked))
     },
 
     gameSquareClicked: function(event) {
@@ -178,8 +178,7 @@ let gameResult = {
         newGameBtn.setAttribute('id', 'new-game-btn');
         newGameBtn.textContent = 'New Game';
         playerContainer.appendChild(newGameBtn);
-
-
+        newGameBtn.addEventListener('click', newGame.resetGameBoardSquares);
     },
     removePlayerContainerChildren: function() {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
@@ -187,6 +186,15 @@ let gameResult = {
         let child2 = document.getElementById('player2-para');
         playerContainer.removeChild(child1);
         playerContainer.removeChild(child2);
+    }
+}
+
+const newGame = {
+    resetGameBoardSquares: function() {
+        gameBoard.gameBoardSquares.forEach(square => {
+            square.disabled = false;
+            square.textContent = '';
+        });
     }
 }
 
