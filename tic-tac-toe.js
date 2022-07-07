@@ -89,8 +89,15 @@ let playerLetterSelection = {
         player2Para = document.createElement('p');
         player2Para.setAttribute('id', 'player2-para');
 
+        resetBtn = document.createElement('button');
+        resetBtn.setAttribute('id', 'reset-btn');
+        resetBtn.textContent = 'New Game';
+
         playerContainer.appendChild(player1Para);
         playerContainer.appendChild(player2Para);
+        playerContainer.appendChild(resetBtn);
+
+        playerLetterSelection.activateResetBtn();
 
         if (player1Letter === 'X') {
             player1Para.textContent = 'Player 1, you are X\'s.';
@@ -107,6 +114,10 @@ let playerLetterSelection = {
     removePlayerSelectContainer: function() {
         let playerSelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
         playerSelectContainer.remove();
+    },
+    activateResetBtn: function() {
+        let resetBtn = document.getElementById('reset-btn');
+        resetBtn.addEventListener('click', newGame.resetGame);
     }
 }
 
@@ -174,8 +185,6 @@ let gameResult = {
     gameOver: function(outcome='win') {
         gameResult.disableAllGameBoardSquares();
         gameResult.displayWinner(outcome);
-        gameResult.removePlayerContainerChildren();
-        gameResult.addNewGameButton(); 
     },
     disableAllGameBoardSquares: function() {
         let gameBoardSquares = Array.from(document.getElementsByClassName('game-square'))
@@ -198,22 +207,19 @@ let gameResult = {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
         let player1Para = document.getElementById('player1-para');
         let player2Para = document.getElementById('player2-para');
-        playerContainer.removeChild(player1Para);
-        playerContainer.removeChild(player2Para);
-    },
-    addNewGameButton: function() {
-        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
-        const newGameBtn = document.createElement('button');
-        newGameBtn.setAttribute('id', 'new-game-btn');
-        newGameBtn.textContent = 'New Game';
-        playerContainer.appendChild(newGameBtn);
-        newGameBtn.addEventListener('click', newGame.resetGame);
-    },
+        let resetBtn = document.getElementById('reset-btn');
+        if (player1Para !== null && player2Para !== null && resetBtn !== null) {
+            playerContainer.removeChild(player1Para);
+            playerContainer.removeChild(player2Para);
+            playerContainer.removeChild(resetBtn);
+        }
+    }
 }
 
 const newGame = {
     resetGameBoardSquares: function() {
         gameBoard.gameBoardSquares.forEach(square => {
+            square.disabled = true;
             square.textContent = '';
         });
     },
@@ -223,10 +229,6 @@ const newGame = {
     },
     clearLetterTracker: function() {
         gameBoard.letterTracker = {};
-    },
-    removeNewGameBtn: function() {
-        let newGameBtn = document.getElementById('new-game-btn');
-        newGameBtn.remove();
     },
     setPlayerSelectContainer: function() {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
@@ -254,9 +256,10 @@ const newGame = {
     },
     resetGame: function() {
         newGame.resetGameBoardSquares();
+        gameResult.removePlayerContainerChildren();
         newGame.clearPlayerHeader();
         newGame.clearLetterTracker();
-        newGame.removeNewGameBtn();
+        gameBoard.clickCount = 0;
         newGame.setPlayerSelectContainer();
         gameFlow.addListeners();
     }
