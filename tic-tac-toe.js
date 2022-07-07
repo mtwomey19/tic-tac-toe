@@ -22,9 +22,12 @@ let gameBoard = {
         }
         event.target.disabled = true
         gameBoard.updateHeader(playerTurn);
-        gameResult.checkHorizontal(gameBoard.letterTracker);
-        gameResult.checkVertical(gameBoard.letterTracker);
-        gameResult.checkDiaganol(gameBoard.letterTracker);
+        let horizCheck = gameResult.checkHorizontal(gameBoard.letterTracker);
+        let vertCheck = gameResult.checkVertical(gameBoard.letterTracker);
+        let diagCheck = gameResult.checkDiaganol(gameBoard.letterTracker);
+        if (!horizCheck && !vertCheck && !diagCheck) {
+            gameResult.checkTie(gameBoard.letterTracker);
+        }
     },
     getPlayerTurn: function() {
         gameBoard.clickCount += 1;
@@ -42,7 +45,7 @@ let gameBoard = {
         if (playerTurn === 'Player1') {
             playerHeader.textContent = 'Player 2, it\'s your turn.';
         } else {
-            playerHeader.textContent = 'Player 1, it\'s your turn';
+            playerHeader.textContent = 'Player 1, it\'s your turn.';
         }
     },
     updateLetterTracker: function (squareId, letter) {
@@ -113,19 +116,19 @@ let gameResult = {
             (letterTracker['btn-0'] === 'O' && letterTracker['btn-1'] === 'O' && letterTracker['btn-2'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(1);
+            return true;
         } 
         if ((letterTracker['btn-3'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-5'] === 'X') ||
             (letterTracker['btn-3'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-5'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(2);
+            return true;
         }
         if ((letterTracker['btn-6'] === 'X' && letterTracker['btn-7'] === 'X' && letterTracker['btn-8'] === 'X') ||
             (letterTracker['btn-6'] === 'O' && letterTracker['btn-7'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(3);
+            return true;
         }  
     },
     checkVertical: function(letterTracker) {
@@ -133,33 +136,44 @@ let gameResult = {
             (letterTracker['btn-0'] === 'O' && letterTracker['btn-3'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
             gameResult.gameOver();
+            return true;
         }
         if ((letterTracker['btn-1'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-7'] === 'X') ||
             (letterTracker['btn-1'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-7'] === 'O')
         ) {
             gameResult.gameOver();
+            return true;
         }
         if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-5'] === 'X' && letterTracker['btn-8'] === 'X') ||
             (letterTracker['btn-2'] === 'O' && letterTracker['btn-5'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
             gameResult.gameOver();
+            return true;
         }
+
     },
     checkDiaganol: function(letterTracker) {
         if ((letterTracker['btn-0'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-8'] === 'X') ||
             (letterTracker['btn-0'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
             gameResult.gameOver();
+            return true;
         }
         if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-6'] === 'X') ||
             (letterTracker['btn-2'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
             gameResult.gameOver();
+            return true;
         }
     },
-    gameOver: function() {
+    checkTie: function(letterTracker) {
+        if (Object.keys(letterTracker).length === 9) {
+            gameResult.gameOver('tie');
+        }
+    },
+    gameOver: function(outcome='win') {
         gameResult.disableAllGameBoardSquares();
-        gameResult.displayWinner();
+        gameResult.displayWinner(outcome);
         gameResult.removePlayerContainerChildren();
         gameResult.addNewGameButton(); 
     },
@@ -167,13 +181,17 @@ let gameResult = {
         let gameBoardSquares = Array.from(document.getElementsByClassName('game-square'))
         gameBoardSquares.forEach(square => square.disabled = true);
     },
-    displayWinner: function() {
-        let player = gameBoard.getPlayerTurn();
+    displayWinner: function(outcome) {
         let playerHeader = document.getElementById('player-header-p');
-        if (player === 'Player2') {
-            playerHeader.textContent = 'Player 1 Wins!'
+        if (outcome === 'tie') {
+            playerHeader.textContent = 'Tie!'
         } else {
-            playerHeader.textContent = 'Player 2 Wins!'
+            let player = gameBoard.getPlayerTurn();
+            if (player === 'Player2') {
+                playerHeader.textContent = 'Player 1 Wins!'
+            } else {
+                playerHeader.textContent = 'Player 2 Wins!'
+            }
         }
     },
     removePlayerContainerChildren: function() {
