@@ -13,6 +13,9 @@ let gameBoard = {
     gameSquareClicked: function(event) {
         let playerTurn = gameBoard.getPlayerTurn();
         let squareId = event.target.id;
+        let img = document.createElement('img');
+        const xIcon = './icons/x.svg';
+        const oIcon = './icons/o.svg';
         if (playerTurn === 'Player1') {
             event.target.textContent = gameBoard.p1Letter;
             gameBoard.updateLetterTracker(squareId, gameBoard.p1Letter)
