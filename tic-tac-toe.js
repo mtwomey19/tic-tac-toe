@@ -5,9 +5,11 @@ let gameBoard = {
     p2Letter: '',
     letterTracker: {},
     addListeners: function() {
-        gameBoard.gameBoardSquares.forEach(square => square.addEventListener('click', gameBoard.gameSquareClicked))
+        gameBoard.gameBoardSquares.forEach(function(square) {
+            square.disabled = false;
+            square.addEventListener('click', gameBoard.gameSquareClicked)
+        })
     },
-
     gameSquareClicked: function(event) {
         let playerTurn = gameBoard.getPlayerTurn();
         let squareId = event.target.id;
@@ -48,11 +50,15 @@ let gameBoard = {
     }
 };
 
-let gameFlow = (function() {
-    let player1Options = Array.from(document.getElementsByClassName('p1-select-btn'));
-    player1Options.forEach(button => button.addEventListener('click', player1Selection));
-
-    function player1Selection(event) {
+let gameFlow = {
+    getPlayer1Options: function() {
+        return Array.from(document.getElementsByClassName('p1-select-btn'));
+    },
+    addListeners: function() {
+        let player1Options = gameFlow.getPlayer1Options();
+        player1Options.forEach(button => button.addEventListener('click', gameFlow.player1Selection));
+    },
+    player1Selection: function(event) {
         const letter = event.target.id;
         let player1Letter = '';
         let player2Letter = '';
@@ -64,17 +70,16 @@ let gameFlow = (function() {
             player2Letter = 'X';
         }
         gameBoard.setLetterAssignments(player1Letter, player2Letter);
+        playerLetterSelection.removePlayerSelectContainer();
         playerLetterSelection.afterPlayer1Selection(player1Letter);
         playerLetterSelection.initPlayerHeader();
         gameBoard.addListeners();
     }
-})();
+};
 
 let playerLetterSelection = {
     afterPlayer1Selection: function(player1Letter) {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
-        let player1SelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
-        player1SelectContainer.remove();
 
         player1Para = document.createElement('p');
         player1Para.setAttribute('id', 'player1-para');
@@ -95,6 +100,10 @@ let playerLetterSelection = {
     initPlayerHeader: function() {
         let playerHeader = document.getElementById('player-header-p');
         playerHeader.textContent = 'Player 1, it\'s your turn.';
+    },
+    removePlayerSelectContainer: function() {
+        let playerSelectContainer = Array.from(document.getElementsByClassName('p1-selection-container'))[0];
+        playerSelectContainer.remove();
     }
 }
 
@@ -124,19 +133,16 @@ let gameResult = {
             (letterTracker['btn-0'] === 'O' && letterTracker['btn-3'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(4);
         }
         if ((letterTracker['btn-1'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-7'] === 'X') ||
             (letterTracker['btn-1'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-7'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(5);
         }
         if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-5'] === 'X' && letterTracker['btn-8'] === 'X') ||
             (letterTracker['btn-2'] === 'O' && letterTracker['btn-5'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(6);
         }
     },
     checkDiaganol: function(letterTracker) {
@@ -144,13 +150,11 @@ let gameResult = {
             (letterTracker['btn-0'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-8'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(7);
         }
         if ((letterTracker['btn-2'] === 'X' && letterTracker['btn-4'] === 'X' && letterTracker['btn-6'] === 'X') ||
             (letterTracker['btn-2'] === 'O' && letterTracker['btn-4'] === 'O' && letterTracker['btn-6'] === 'O')
         ) {
             gameResult.gameOver();
-            console.log(8);
         }
     },
     gameOver: function() {
@@ -172,29 +176,72 @@ let gameResult = {
             playerHeader.textContent = 'Player 2 Wins!'
         }
     },
+    removePlayerContainerChildren: function() {
+        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
+        let player1Para = document.getElementById('player1-para');
+        let player2Para = document.getElementById('player2-para');
+        playerContainer.removeChild(player1Para);
+        playerContainer.removeChild(player2Para);
+    },
     addNewGameButton: function() {
         let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
         const newGameBtn = document.createElement('button');
         newGameBtn.setAttribute('id', 'new-game-btn');
         newGameBtn.textContent = 'New Game';
         playerContainer.appendChild(newGameBtn);
-        newGameBtn.addEventListener('click', newGame.resetGameBoardSquares);
+        newGameBtn.addEventListener('click', newGame.resetGame);
     },
-    removePlayerContainerChildren: function() {
-        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
-        let child1 = document.getElementById('player1-para');
-        let child2 = document.getElementById('player2-para');
-        playerContainer.removeChild(child1);
-        playerContainer.removeChild(child2);
-    }
 }
 
 const newGame = {
     resetGameBoardSquares: function() {
         gameBoard.gameBoardSquares.forEach(square => {
-            square.disabled = false;
             square.textContent = '';
         });
+    },
+    clearPlayerHeader: function() {
+        let playerHeader = document.getElementById('player-header-p');
+        playerHeader.textContent = '';
+    },
+    clearLetterTracker: function() {
+        gameBoard.letterTracker = {};
+    },
+    removeNewGameBtn: function() {
+        let newGameBtn = document.getElementById('new-game-btn');
+        newGameBtn.remove();
+    },
+    setPlayerSelectContainer: function() {
+        let playerContainer = Array.from(document.getElementsByClassName('player-container'))[0];
+        let playerSelectContainer = document.createElement('div');
+        playerSelectContainer.setAttribute('class', 'p1-selection-container');
+        playerContainer.appendChild(playerSelectContainer);
+        let para1 = document.createElement('p');
+        para1.setAttribute('id', 'player-para-1');
+        para1.textContent = 'Player 1,';
+        let para2 = document.createElement('p');
+        para2.setAttribute('id', 'player-para-2')
+        para2.textContent = ' or ';
+        let xBtn = document.createElement('button');
+        xBtn.setAttribute('class', 'p1-select-btn');
+        xBtn.setAttribute('id', 'p1-x');
+        xBtn.textContent = 'X';
+        let oBtn = document.createElement('button');
+        oBtn.setAttribute('class', 'p1-select-btn');
+        oBtn.setAttribute('id', 'p1-o');
+        oBtn.textContent = 'O';
+        playerSelectContainer.appendChild(para1);
+        playerSelectContainer.appendChild(xBtn);
+        playerSelectContainer.appendChild(para2);
+        playerSelectContainer.appendChild(oBtn);
+    },
+    resetGame: function() {
+        newGame.resetGameBoardSquares();
+        newGame.clearPlayerHeader();
+        newGame.clearLetterTracker();
+        newGame.removeNewGameBtn();
+        newGame.setPlayerSelectContainer();
+        gameFlow.addListeners();
     }
 }
-
+newGame.setPlayerSelectContainer();
+gameFlow.addListeners();
